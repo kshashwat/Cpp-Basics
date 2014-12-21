@@ -31,36 +31,34 @@ class BST {
  public:
   ~BST();
 
-  bool contains(int target) const;
-  void print_tree() const;
+  bool Contains(int target) const;
+  void Print() const;
 
-  void insert(int target);
-  void del(int target);
+  void Insert(int target);
+  void Delete(int target);
 
  private:
-  BSTNode* search(int target) const;
-  BSTNode* succ(BSTNode* target) const;
-  BSTNode* pred(BSTNode* target) const;
-  void print_subtree(BSTNode* target) const;
-
-  void subtree_del(BSTNode* target);
+  BSTNode* Search(int target) const;
+  BSTNode* Next(BSTNode* target) const;
+  BSTNode* Prev(BSTNode* target) const;
+  void PrintSubtree(BSTNode* target) const;
 
   BSTNode* root = nullptr;
 };
 
-void BST::print_tree() const {
-  print_subtree(root);
+void BST::Print() const {
+  PrintSubtree(root);
   cout << endl;
 }
 
-void BST::print_subtree(BSTNode* target) const {
-  if (target->left != nullptr) {print_subtree(target->left);}
+void BST::PrintSubtree(BSTNode* target) const {
+  if (target->left != nullptr) {PrintSubtree(target->left);}
   if (target != nullptr) {cout << target->key << " ";}
-  if (target->right != nullptr) {print_subtree(target->right);}
+  if (target->right != nullptr) {PrintSubtree(target->right);}
 }
 
-bool BST::contains(int key) const {
-  BSTNode* target = BST::search(key);
+bool BST::Contains(int key) const {
+  BSTNode* target = Search(key);
   if (target == nullptr) {
     return false;
   }
@@ -73,8 +71,7 @@ BST::~BST() {
   }
 }
 
-//search for a given key
-BSTNode* BST::search(int target) const {
+BSTNode* BST::Search(int target) const {
   BSTNode* cur_node = root;
   while (true) {
     if (cur_node == nullptr) {
@@ -94,7 +91,7 @@ BSTNode* BST::search(int target) const {
 }
 
 //insert a given key
-void BST::insert(int target) {
+void BST::Insert(int target) {
   BSTNode* cur_node = root;
   if (cur_node == nullptr) {
     root = new BSTNode;
@@ -128,7 +125,7 @@ void BST::insert(int target) {
 }
 
 //return pointer to the node which has the smallest key greater than the given node's key
-BSTNode* BST::succ(BSTNode* target) const {
+BSTNode* BST::Next(BSTNode* target) const {
   if (target->right != nullptr) {
     BSTNode* cur_node = target->right;
     while (true) {
@@ -156,7 +153,7 @@ BSTNode* BST::succ(BSTNode* target) const {
 }
 
 //return pointer to the node which has the largest key less than the given node's key
-BSTNode* BST::pred(BSTNode* target) const {
+BSTNode* BST::Prev(BSTNode* target) const {
   if (target->left != nullptr) {
     BSTNode* cur_node = target->left;
     while (true) {
@@ -184,8 +181,8 @@ BSTNode* BST::pred(BSTNode* target) const {
 }
 
 //delete a given key and its node 
-void BST::del(int key) {
-  BSTNode* target = BST::search(key);
+void BST::Delete(int key) {
+  BSTNode* target = Search(key);
   if (target == nullptr) {return;}
   
   if (target->right == nullptr && target->left == nullptr) {
@@ -247,29 +244,29 @@ void BST::del(int key) {
     }
   }
 
-  BSTNode* succ_node = succ(target);
+  BSTNode* succ_node = Next(target);
   int succ_key = succ_node->key;
   cout << succ_key << " " << target->key << endl;
-  del(succ_key);
+  Delete(succ_key);
   target->key = succ_key;
   return;
 }
 
 int main() {
   BST tree;
-  tree.insert(8);
-  tree.insert(6);
-  tree.insert(7);
-  tree.insert(1);
-  tree.insert(60);
-  tree.print_tree();
-  cout << tree.contains(60) << endl;
-  tree.del(60);
-  tree.print_tree();
-  cout << tree.contains(60) << endl;
-  tree.insert(60);
-  tree.print_tree();
-  cout << tree.contains(60) << endl;
+  tree.Insert(8);
+  tree.Insert(6);
+  tree.Insert(7);
+  tree.Insert(1);
+  tree.Insert(60);
+  tree.Print();
+  cout << tree.Contains(60) << endl;
+  tree.Delete(60);
+  tree.Print();
+  cout << tree.Contains(60) << endl;
+  tree.Insert(60);
+  tree.Print();
+  cout << tree.Contains(60) << endl;
 
   return 0;
 }
