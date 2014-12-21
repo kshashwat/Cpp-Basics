@@ -43,7 +43,6 @@ class BST {
  private:
   BSTNode* Search(int target) const;
   BSTNode* Next(BSTNode* target) const;
-  BSTNode* Prev(BSTNode* target) const;
   void PrintSubtree(BSTNode* target) const;
 
   BSTNode* root = nullptr;
@@ -138,96 +137,53 @@ BSTNode* BST::Next(BSTNode* target) const {
   return nullptr;
 }
 
-//return pointer to the node which has the largest key less than the given node's key
-BSTNode* BST::Prev(BSTNode* target) const {
-  if (target->left != nullptr) {
-    BSTNode* cur_node = target->left;
-    while (true) {
-      if (cur_node->right == nullptr) {
-        return cur_node;
-      }
-      else {
-        cur_node = cur_node->right;
-      }
-    }
-  }
-  BSTNode* cur_node = target;
-  while (true) {
-    if (cur_node->parent == nullptr) {
-      return nullptr;
-    }
-    if (cur_node->parent->right == cur_node) {
-      return cur_node->parent;
-    }
-    else {
-      cur_node = cur_node->parent;
-    }
-  }
-  return nullptr;
-}
-
 //delete a given key and its node 
 void BST::Delete(int key) {
   BSTNode* target = Search(key);
-  if (target == nullptr) {return;}
+  if (target == nullptr) {
+    return;
+  }
   
   if (target->right == nullptr && target->left == nullptr) {
-    if (target->parent == nullptr) {
-      delete target;
-      return;
+    if (target->parent != nullptr) {
+      if (target->parent->left == target) {
+        target->parent->left = nullptr;
+      } else {
+        target->parent->right = nullptr;
+      }
     }
-    else if (target->parent->left == target) {
-      target->parent->left = nullptr;
-      delete target;
-      return;
-    }
-    else { 
-      target->parent->right = nullptr;
-      delete target;
-      return;
-    }
+    delete target;
+    return;
   }
 
   if (target->right == nullptr && target->left != nullptr) {
     if (target->parent == nullptr) {
       target->left->parent = nullptr;
       root = target->left;
-      delete target;
-      return;
-    }
-    else if (target->parent->left == target) {
+    } else if (target->parent->left == target) {
       target->parent->left = target->left;
       target->left->parent = target->parent;
-      delete target;
-      return;
-    }
-    else {
+    } else {
       target->parent->right = target->left;
       target->left->parent = target->parent;
-      delete target;
-      return;
     }
+    delete target;
+    return;
   }
 
   if (target->right != nullptr && target->left == nullptr) {
     if (target->parent == nullptr) {
       target->right->parent = nullptr;
       root = target->right;
-      delete target;
-      return;
-    }
-    else if (target->parent->left == target) {
+    } else if (target->parent->left == target) {
       target->parent->left = target->right;
       target->right->parent = target->parent;
-      delete target;
-      return;
-    }
-    else {
+    } else {
       target->parent->right = target->right;
       target->right->parent = target->parent;
-      delete target;
-      return;
     }
+    delete target;
+    return;
   }
 
   BSTNode* succ_node = Next(target);
