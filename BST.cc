@@ -94,22 +94,17 @@ void BST::Insert(int key) {
   }
   BSTNode* cur_node = root;
   while (true) {
-    if (key >= cur_node->key && cur_node->right == nullptr) {
-      cur_node->right = new BSTNode(key, cur_node);
-      cur_node->right->right = nullptr;
-      cur_node->right->left = nullptr;
-      return;
-    }
-    if (key <= cur_node->key && cur_node->left == nullptr) {
-      cur_node->left = new BSTNode(key, cur_node);
-      cur_node->left->right = nullptr;
-      cur_node->left->left = nullptr;
-      return;
-    }
     if (key >= cur_node->key) {
+      if (cur_node->right == nullptr) {
+        cur_node->right = new BSTNode(key, cur_node);
+        return;
+      }
       cur_node = cur_node->right;
-    }
-    else {
+    } else {
+      if (cur_node->left == nullptr) {
+        cur_node->left = new BSTNode(key, cur_node);
+        return;
+      }
       cur_node = cur_node->left;
     }
   }
