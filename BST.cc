@@ -10,6 +10,7 @@ using namespace std;
 
 //class and struct declarations
 struct BSTNode {
+  BSTNode(int key, BSTNode* parent);
   ~BSTNode();
 
   int key;
@@ -17,6 +18,8 @@ struct BSTNode {
   BSTNode* left = nullptr;
   BSTNode* parent = nullptr;
 };
+
+BSTNode::BSTNode(int k, BSTNode* p) : key(k), parent(p) {}
 
 BSTNode::~BSTNode() {
   if (left != nullptr) {
@@ -71,51 +74,39 @@ BST::~BST() {
   }
 }
 
-BSTNode* BST::Search(int target) const {
+BSTNode* BST::Search(int key) const {
   BSTNode* cur_node = root;
-  while (true) {
-    if (cur_node == nullptr) {
-      return nullptr;
-    }
-    else if (cur_node->key == target) {
-      return cur_node;
-    }
-    else if (cur_node->key > target) {
+  while (cur_node != nullptr && cur_node->key != key) {
+    if (cur_node->key > key) {
       cur_node = cur_node->left;
-    }
-    else {
+    } else {
       cur_node = cur_node->right;
     }
   }
-  return nullptr;
+  return cur_node;
 }
 
 //insert a given key
-void BST::Insert(int target) {
-  BSTNode* cur_node = root;
-  if (cur_node == nullptr) {
-    root = new BSTNode;
-    root->key = target;
+void BST::Insert(int key) {
+  if (root == nullptr) {
+    root = new BSTNode(key, nullptr);
     return;
   }
+  BSTNode* cur_node = root;
   while (true) {
-    if (target >= cur_node->key && cur_node->right == nullptr) {
-      cur_node->right = new BSTNode;
-      cur_node->right->key = target;
-      cur_node->right->parent = cur_node;
+    if (key >= cur_node->key && cur_node->right == nullptr) {
+      cur_node->right = new BSTNode(key, cur_node);
       cur_node->right->right = nullptr;
       cur_node->right->left = nullptr;
       return;
     }
-    if (target <= cur_node->key && cur_node->left == nullptr) {
-      cur_node->left = new BSTNode;
-      cur_node->left->key = target;
-      cur_node->left->parent = cur_node;
+    if (key <= cur_node->key && cur_node->left == nullptr) {
+      cur_node->left = new BSTNode(key, cur_node);
       cur_node->left->right = nullptr;
       cur_node->left->left = nullptr;
       return;
     }
-    if (target >= cur_node->key) {
+    if (key >= cur_node->key) {
       cur_node = cur_node->right;
     }
     else {
